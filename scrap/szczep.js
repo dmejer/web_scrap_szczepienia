@@ -2,7 +2,7 @@ const player = require('play-sound')(opts = {})
 const {chromium} = require('playwright');
 const beeper = require('beeper');
 
-(async () => {
+async function scrap() {
     const browser = await chromium.launch({
         headless: true
     });
@@ -15,26 +15,30 @@ const beeper = require('beeper');
     await page.goto('https://szczepienia.github.io/wielkopolskie');
 
     const table = await page.$$eval('#szczepienia>tbody>tr', (rows) => {
-        console.log(rows);
-        return rows.map(row => {
+        const result = [];
+        rows.forEach(row => {
+            const toText = (element) => element.innerText.trim();
+
             const miasto = row.querySelectorAll('td')[0];
             const data = row.querySelectorAll('td')[1];
             const rodzaj = row.querySelectorAll('td')[3];
-
-            const toText = (element) => element.innerText.trim();
-            return {
+            if (toText(miasto).toLowerCase() != 'poznań') {
+                return;
+            }
+            result.push({
                 miasto: toText(miasto).toLowerCase(),
                 data: toText(data),
                 rodzaj: toText(rodzaj).toLowerCase()
-            }
+            })
         })
+        return result;
     });
 
     console.log(table);
     let found = false;
     table.forEach((row) => {
-        if (row.miasto === 'poznań' && (row.rodzaj === 'pfizer' || row.rodzaj === 'moderna')) {
-            console.log("JEST SZCZEPIONKA", row.miasto, row.data);
+        if (row.rodzaj === 'pfizer' || row.rodzaj === 'moderna') {
+            console.log("JEST SZCZEPIONKA PFIZER", row.miasto, row.data);
             found = true;
         }
     });
@@ -49,4 +53,7 @@ const beeper = require('beeper');
     // ---------------------
     await context.close();
     await browser.close();
-})();
+};
+
+scrap();
+setInterval(scrap, 60000);
