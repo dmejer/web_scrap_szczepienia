@@ -1,6 +1,5 @@
-const player = require('play-sound')(opts = {})
 const {chromium} = require('playwright');
-const beeper = require('beeper');
+const { exec } = require("child_process");
 
 async function scrap() {
     const browser = await chromium.launch({
@@ -44,10 +43,7 @@ async function scrap() {
     });
 
     if (found) {
-        await beeper(3);
-        player.play('./alarm.mp3', {timeout: 4000}, function (err) {
-            if (err) throw err
-        })
+       exec("start alarm.mp3");
     }
 
     // ---------------------
