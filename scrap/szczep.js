@@ -78,7 +78,7 @@ async function scrap() {
 
   if (!alarmExecuted && lastFound) {
     alarmExecuted = true;
-    // exec("start alarm.mp3");
+    exec("start alarm.mp3");
   }
 
   // ---------------------
