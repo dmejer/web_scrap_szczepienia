@@ -21,7 +21,7 @@ async function scrap() {
   await page.goto("https://szczepienia.github.io/wielkopolskie");
 
   const doNastepnej = await page.innerText(".post-content #nexttime");
-  console.log("Czas do nastepnej:", doNastepnej);
+  console.log("Czas do nastepnej aktualizacji:", doNastepnej);
 
   const table = await page.$$eval("#szczepienia>tbody>tr", rows => {
     const result = [];
