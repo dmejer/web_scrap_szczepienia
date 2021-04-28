@@ -28,16 +28,40 @@ async function scrap() {
     rows.forEach(row => {
       const toText = element => element.innerText.trim();
 
-      const miasto = row.querySelectorAll("td")[0];
-      const data = row.querySelectorAll("td")[1];
-      const rodzaj = row.querySelectorAll("td")[3];
-      if (toText(miasto).toLowerCase() != "poznań") {
+      const miasto = toText(row.querySelectorAll("td")[0]);
+      if (miasto.toLowerCase() != "poznań") {
         return;
       }
+
+      const data = toText(row.querySelectorAll("td")[1]);
+      let mies = 5;
+      if (data.toLowerCase().includes("maj")) {
+        mies = 5;
+      } else if (data.toLowerCase().includes("kwie")) {
+        mies = 4;
+      } else if (data.toLowerCase().includes("czerw")) {
+        mies = 6;
+      }
+      let dzien = +data.match(/^\d+/)[0];
+
+      if (mies > 5) {
+        return;
+      }
+      if (dzien > 10 && mies >= 5) {
+        return;
+      }
+
+      const rodzaj = toText(row.querySelectorAll("td")[3]);
+      if (rodzaj !== "pfizer" && rodzaj !== "moderna") {
+        return;
+      }
+
       result.push({
-        miasto: toText(miasto).toLowerCase(),
-        data: toText(data),
-        rodzaj: toText(rodzaj).toLowerCase()
+        miasto: miasto.toLowerCase(),
+        data: data,
+        rodzaj: rodzaj.toLowerCase(),
+        dzien: dzien,
+        mies: mies
       });
     });
     return result;
@@ -54,7 +78,7 @@ async function scrap() {
 
   if (!alarmExecuted && lastFound) {
     alarmExecuted = true;
-    exec("start alarm.mp3");
+    // exec("start alarm.mp3");
   }
 
   // ---------------------
