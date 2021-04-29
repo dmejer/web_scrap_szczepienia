@@ -28,8 +28,13 @@ async function scrap() {
     rows.forEach(row => {
       const toText = element => element.innerText.trim();
 
-      const miasto = toText(row.querySelectorAll("td")[0]);
+      const miasto = toText(row.querySelectorAll("td")[0]).toLowerCase();
       if (miasto.toLowerCase() != "poznań") {
+        return;
+      }
+	  
+	  const rodzaj = toText(row.querySelectorAll("td")[3]).toLowerCase();
+      if (rodzaj !== "pfizer" && rodzaj !== "moderna") {
         return;
       }
 
@@ -51,15 +56,10 @@ async function scrap() {
         return;
       }
 
-      const rodzaj = toText(row.querySelectorAll("td")[3]);
-      if (rodzaj !== "pfizer" && rodzaj !== "moderna") {
-        return;
-      }
-
       result.push({
-        miasto: miasto.toLowerCase(),
+        miasto: miasto,
         data: data,
-        rodzaj: rodzaj.toLowerCase(),
+        rodzaj: rodzaj),
         dzien: dzien,
         mies: mies
       });
