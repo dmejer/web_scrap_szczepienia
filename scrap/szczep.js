@@ -87,4 +87,4 @@ async function scrap() {
 }
 
 scrap();
-setInterval(scrap, 60000);
+setInterval(scrap, 30000);
