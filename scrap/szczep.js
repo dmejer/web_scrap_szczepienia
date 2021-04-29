@@ -59,7 +59,7 @@ async function scrap() {
       result.push({
         miasto: miasto,
         data: data,
-        rodzaj: rodzaj),
+        rodzaj: rodzaj,
         dzien: dzien,
         mies: mies
       });
